@@ -81,9 +81,9 @@ function populateUI() {
         element.classList.add('selected');
       }
     });
+    count.innerText = selectedSeats.length;
+    total.innerText = selectedMoviePrice * selectedSeats.length;
   }
-  count.innerText = selectedSeats.length;
-  total.innerText = selectedMoviePrice * selectedSeats.length;
 
   if (selectedMovieIndex !== null) {
     movie.selectedIndex = selectedMovieIndex;
