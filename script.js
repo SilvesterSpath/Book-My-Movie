@@ -1,8 +1,10 @@
 const seatsEl = document.querySelectorAll('.container .seat');
 const movie = document.getElementById('movie');
-const count = document.getElementById('count');
-const total = document.getElementById('total');
+let count = document.getElementById('count');
+let total = document.getElementById('total');
 let price = movie.value;
+
+populateUI();
 
 let selected = 0;
 
@@ -10,7 +12,7 @@ let selected = 0;
 movie.addEventListener('change', (e) => {
   price = e.target.value;
   summary(selected);
-  console.log(price);
+  setMovieData(e.target);
 });
 
 // Seat Click event
@@ -40,4 +42,50 @@ function unSelect(element) {
 function summary(number) {
   count.innerText = number;
   total.innerText = price * number;
+  updateSelectedCount();
+}
+
+function updateSelectedCount() {
+  const selectedSeats = document.querySelectorAll('.row .seat.selected');
+
+  // Copy selected seats into arr
+  // Map through array
+  // return a new array indexes
+
+  const seatsIndex = [...selectedSeats].map((i) => {
+    return [...seatsEl].indexOf(i);
+  });
+  console.log(seatsIndex);
+  localStorage.setItem('selectedSeats', JSON.stringify(seatsIndex));
+
+  count.innerText = selectedSeats.length;
+  total.innerText = selectedSeats.length * price;
+}
+
+// Save selected movie index and price
+function setMovieData(movie) {
+  localStorage.setItem('selectedMovieIndex', movie.selectedIndex);
+  localStorage.setItem('selectedMoviePrice', movie.value);
+}
+
+// Get data from localStorage and pupulate UI
+function populateUI() {
+  const selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'));
+  const selectedMovieIndex = localStorage.getItem('selectedMovieIndex');
+  const selectedMoviePrice = localStorage.getItem('selectedMoviePrice');
+  console.log(selectedSeats);
+
+  if (selectedSeats !== null && selectedSeats.length > 0) {
+    seatsEl.forEach((element, index) => {
+      if (selectedSeats.includes(index)) {
+        element.classList.add('selected');
+      }
+    });
+  }
+  count.innerText = selectedSeats.length;
+  total.innerText = selectedMoviePrice * selectedSeats.length;
+
+  if (selectedMovieIndex !== null) {
+    movie.selectedIndex = selectedMovieIndex;
+  }
 }
